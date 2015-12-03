@@ -25,6 +25,14 @@ echo "Copying customisations to new Drupal"
 rm -fR drupal-$version/sites
 cp -r $SITE_DIRECTORY/sites drupal-$version
 
+if [ -n "$SITE_OWNER" ]; then
+    sudo chown -R $SITE_OWNER drupal-$version
+fi
+
+if [ ! -f drupal-$version/sites/all/modules/dblib_driver_for_sql_server/dblib ]; then
+    ln -s drupal-$version/sites/all/modules/dblib_driver_for_sql_server/dblib drupal-$version/includes/database/dblib
+fi
+
 echo "Diffing HTACCESS"
 diff $SITE_DIRECTORY/.htaccess drupal-$version/.htaccess
 
