@@ -29,10 +29,6 @@ if [ -n "$SITE_OWNER" ]; then
     sudo chown -R $SITE_OWNER drupal-$version
 fi
 
-if [ ! -f drupal-$version/sites/all/modules/dblib_driver_for_sql_server/dblib ]; then
-    ln -s drupal-$version/sites/all/modules/dblib_driver_for_sql_server/dblib drupal-$version/includes/database/dblib
-fi
-
 echo "Diffing HTACCESS"
 diff $SITE_DIRECTORY/.htaccess drupal-$version/.htaccess
 
@@ -82,6 +78,10 @@ mv $SITE_DIRECTORY "$SITE_DIRECTORY"_pre_$version
 
 echo "Moving new site into place..."
 mv drupal-$version $SITE_DIRECTORY
+
+if [ ! -f $SITE_DIRECTORY/sites/all/modules/dblib_driver_for_sql_server/dblib ]; then
+    ln -s $SITE_DIRECTORY/sites/all/modules/dblib_driver_for_sql_server/dblib $SITE_DIRECTORY/includes/database/dblib
+fi
 
 sudo /etc/init.d/uol.apache2 restart
 
